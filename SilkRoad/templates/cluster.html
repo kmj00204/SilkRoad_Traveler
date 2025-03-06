@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silk Road Travler</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+</head>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="searchingbutton"
+        style="height:100px; position:absolute;top:5px;left:4px; cursor:pointer;" onclick="window.location='/'">
+
+    <a href="/" style="text-decoration: none;color:white;">
+        <h1 style="margin-bottom: 5px;">The Silk Road Traveler</h1>
+    </a>
+    <nav>
+        <a href="/cluster_info">Cluster</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/up_searching">검색어</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/recommend_cluster">맞춤</a>
+    </nav>
+    <h5 style="top:60px;right:200px;position:absolute;">{{ welcome_message }}</h5>
+
+    {% if welcome_message.startswith('어서오세요') %}
+    <img src="{{ url_for('static', filename='logout_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:165px;" onclick="window.location='/logout'">
+    {% else %}
+    <img src="{{ url_for('static', filename='login_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:160px;" onclick="window.location='/login'">
+    {% endif %}
+    <img src="{{ url_for('static', filename='user_info.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:120px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_like'">
+    <img src="{{ url_for('static', filename='starimage.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:80px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_info'">
+</header>
+
+<body>
+    <div class="container5" style="height:800px;text-align: center;">
+        <h2 align='center' style="margin-bottom: 0;">&lt; Cluster {{cluster_number}} &gt;</h2>
+        <img src="data:image/png;base64,{{ img_data }}" alt="Cluster Plot" style="width:900px;height:600px;">
+        <div style="width: fit-content; display:inline-block">
+            전통<br>
+            <img src="data:image/png;base64,{{img_traditionality}}" style="width:450px;height:200px;">
+        </div>
+        <div style="width: fit-content; display:inline-block">
+            청결<br>
+            <img src="data:image/png;base64,{{img_cleanliness}}" style="width:450px;height:200px;">
+        </div>
+        <div style="width: fit-content; display:inline-block">
+            치안<br>
+            <img src="data:image/png;base64,{{img_security}}" style="width:450px;height:200px;">
+        </div>
+        <div style="width: fit-content; display:inline-block">
+            교통<br>
+            <img src="data:image/png;base64,{{img_transportation}}" style="width:450px;height:200px;">
+        </div>
+        <div style="width: 900px; display: flex; text-align:center;margin-left: 77px;">
+            <div style="flex: 1; height: 225px; display: inline-block; text-align:center;">
+                비용<br>
+                <img src="data:image/png;base64,{{ img_low_cost }}"
+                    style="width:450px;height:200px;display:inline-block;">
+            </div>
+            <div style="width:450px;; height: 225px; display: inline-block; text-align:center;">
+                <br><br>
+                <table border="2"
+                    style="border-collapse: collapse; width: 360px;height:155px; margin: 0 auto;margin-left: 60px; margin-top:7px;">
+                    <tr>
+                        <td></td>
+                        <td>
+                            평균 점수
+                        </td>
+                        <td>
+                            표준 편차
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>전통</td>
+                        <td>
+                            {{avg_traditionality}}
+                        </td>
+                        <td>
+                            {{std_traditionality}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>청결</td>
+                        <td>
+                            {{avg_cleanliness}}
+                        </td>
+                        <td>
+                            {{std_cleanliness}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>치안</td>
+                        <td>{{avg_security}}</td>
+                        <td>{{std_security}}</td>
+
+                    </tr>
+                    <tr>
+                        <td>교통</td>
+                        <td>
+                            {{avg_transportation}}
+                        </td>
+                        <td>
+                            {{std_transportation}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>비용</td>
+                        <td>
+                            {{avg_low_cost}}
+                        </td>
+                        <td>
+                            {{std_low_cost}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <div style="text-align:left; margin-top:3px;">
+            <h3 style="margin-top:0;display:inline;">Cluster {{cluster_number}} 에 속한 도시 목록</h3>
+            &nbsp;&nbsp;<button style="visibility: visible;" id="translate_button">번역</button>
+            <span style="visibility:hidden;" id="hiddenalert"> 번역 중입니다 ...</span>
+        </div>
+        <div style="height:fit-content;">
+            <p style="text-align: left;line-height:2.5;" id="cities-container">{{cities_in_cluster}}</p>
+        </div>
+        <div>
+            <br>
+            <h3><a href="/cluster_info">Cluster</a></h3>
+        </div>
+    </div>
+</body>
+
+
+<footer>
+    <p>&copy; 2024 Term Project &nbsp;&nbsp;&nbsp;Silk Road Traveler</p>
+</footer>
+
+
+<script>
+    var cities_in_cluster = document.getElementById('cities-container').innerText;
+    var citiesContainer = document.getElementById('cities-container');
+
+    let cities_in_cluster_array = cities_in_cluster.split('@');
+
+    var texturl = "";
+
+    cities_in_cluster_array.forEach((city, index) => {
+        let url = `<a href="/tour_city/${city}">${city}</a>`;
+        texturl += url;
+        if (index < cities_in_cluster_array.length - 1) {
+            texturl += ', ';
+        }
+    });
+
+    citiesContainer.innerHTML = texturl;
+
+    const Button = document.getElementById('translate_button');
+    Button.addEventListener('click', function () {
+        const hidden = document.getElementById('hiddenalert');
+        hidden.style.visibility = 'visible';
+        fetch('/get_translate_en_to_ko?city_names=' + encodeURIComponent(cities_in_cluster))
+            .then(response => response.json())
+            .then(data => {
+                console.log(cities_in_cluster_array);
+                console.log(data);
+
+                let arraylist = cities_in_cluster_array.map((city, index) => `${city}:${data[index]}`);
+                let texturls = "";
+                arraylist.forEach((cities, index) => {
+                    citydiv = cities.split(':');
+                    let url = `<a href="/tour_city/${citydiv[0]}">${citydiv[0]}</a>`;
+                    let url2 = `<a href="/tour_city/${citydiv[1]}">${citydiv[1]}`
+                    texturls += url + ' (' + url2 + ')';
+                    if (index < arraylist.length - 1) {
+                        texturls += ', ';
+                    }
+                    citiesContainer.innerHTML = texturls;
+                    hidden.style.visibility = 'hidden';
+                });
+            })
+    })
+
+</script>
+
+</html>

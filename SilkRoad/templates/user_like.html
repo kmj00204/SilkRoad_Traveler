@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silk Road Travler</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+</head>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="searchingbutton"
+        style="height:100px; position:absolute;top:5px;left:4px; cursor:pointer;" onclick="window.location='/'">
+
+    <a href="/" style="text-decoration: none;color:white;">
+        <h1 style="margin-bottom: 5px;">The Silk Road Traveler</h1>
+    </a>
+    <nav>
+        <a href="/cluster_info">Cluster</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/up_searching">검색어</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/recommend_cluster">맞춤</a>
+    </nav>
+    <h5 style="top:60px;right:200px;position:absolute;">{{ welcome_message }}</h5>
+
+    {% if welcome_message.startswith('어서오세요') %}
+    <img src="{{ url_for('static', filename='logout_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:165px;" onclick="window.location='/logout'">
+    {% else %}
+    <img src="{{ url_for('static', filename='login_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:160px;" onclick="window.location='/login'">
+    {% endif %}
+    <img src="{{ url_for('static', filename='user_info.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:120px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_like'">
+    <img src="{{ url_for('static', filename='starimage.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:80px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_info'">
+</header>
+
+<body>
+    <div class="container7">
+        {% if results %}
+        <div style="display: block; text-align: center;">
+            <h2>내가 검색했던 Cluster 설정</h2>
+        </div>
+        <div style="display: flex;justify-content: center;">
+            <table border="2" id="tables"
+                style="border-collapse: collapse; text-align: center; table-layout: auto;max-width:1050px;">
+                <tr>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">이름</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">위도</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">경도</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">전통</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">청결</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">치안</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">교통</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">비용</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">Cluster1</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">Cluster2</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">Cluster3</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">Cluster4</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">Cluster5</td>
+                    <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">시간</td>
+                </tr>
+                {% for result in results %}
+                <tr>
+                    {% for i in range(result|length) %}
+                    {% if result[i] is string and result[i].startswith('.') %}
+                    {%set result_m=result[i].split('.')[1]%}
+                    <td><a href="cluster/{{ result_m }}">{{ result_m }}</a></td>
+                    {% else %}
+                    <td>{{ result[i] }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+            {%else%}
+            <p style="text-align:center">검색한 Cluster 설정이 없습니다.</p>
+            {% endif %}
+        </div>
+        {%if results%}
+        <div style="text-align: right;">
+            <br>
+            <button id='button' username="{{username}}">초기화</button>
+        </div>
+        {%endif%}
+    </div>
+
+</body>
+
+<footer>
+    <p>&copy; 2024 Term Project &nbsp;&nbsp;&nbsp;Silk Road Traveler</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const button = document.getElementById('button');
+        button.addEventListener('click', function () {
+            username = button.getAttribute('username');
+            fetch('clear_user_like?name=' + encodeURIComponent(username))
+        })
+    });
+</script>
+
+</html>

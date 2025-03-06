@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silk Road Travler</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+</head>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="searchingbutton"
+        style="height:100px; position:absolute;top:5px;left:4px; cursor:pointer;" onclick="window.location='/'">
+
+    <a href="/" style="text-decoration: none;color:white;">
+        <h1 style="margin-bottom: 5px;">The Silk Road Traveler</h1>
+    </a>
+    <nav>
+        <a href="/cluster_info">Cluster</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/up_searching">검색어</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/recommend_cluster">맞춤</a>
+    </nav>
+    <h5 style="top:60px;right:200px;position:absolute;">{{ welcome_message }}</h5>
+
+    {% if welcome_message.startswith('어서오세요') %}
+    <img src="{{ url_for('static', filename='logout_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:165px;" onclick="window.location='/logout'">
+    {% else %}
+    <img src="{{ url_for('static', filename='login_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:160px;" onclick="window.location='/login'">
+    {% endif %}
+    <img src="{{ url_for('static', filename='user_info.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:120px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_like'">
+    <img src="{{ url_for('static', filename='starimage.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:80px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_info'">
+</header>
+
+<body>
+    <div class="container4">
+        <h1 align="center" style="margin-bottom: 0; margin-top:0;">{{sname}}</h1>
+        <h3 align="center" style="margin-bottom: 10px; margin-top:10px;">{{nname}}</h3>
+        <img src="{{ src }}" alt="{{ hotel_name }}" style="height:300px;width: 350px;">
+        <img src="{{ url_for('static', filename='defaultimage.jpg') }}" alt=""
+            style="height:300px;width: 350px; display:inline-block;" class="imgtags">
+        <img src="{{ url_for('static', filename='defaultimage2.png') }}" alt=""
+            style="height:300px;width: 350px;display:inline-block;" class="imgtags">
+        <br>
+        <p style="font-size:20px;margin-bottom: 8px;">별점 :
+            <span class="stars" sname="{{sname}}" nname="{{nname}}"></span>
+        </p>
+        <h5 class="yellow-text" style="width:95px;cursor:pointer; border:2px solid black;border-radius:10px;margin:0;"
+            data-hotel-name="{{sname}}" data-hotel-sub="{{nname}}" onclick="openModal(this)">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;별점주기</h5>
+        <p class="information" sname="{{sname}}" nname="{{nname}}" city_name="{{city_name}}" style="font-size: 16px;">로딩
+            중입니다
+            ...
+        </p>
+    </div>
+    <div style="position: absolute;top:750px;right:420px;">
+        <span style="visibility:hidden;" id="hiddenalert"> 번역 중입니다 ...</span>
+        &nbsp;&nbsp;<button style="visibility: hidden;" id="translate_button">번역</button>
+    </div>
+</body>
+
+<div id="myModal" class="modal">
+    <div class="modal-content" style="top:-180px;position: relative;">
+        <h2>전통</h2>
+        <div id="stars1">
+            <span class="starselect1" onclick="selectStar1(1)">★</span>
+            <span class="starselect1" onclick="selectStar1(2)">★</span>
+            <span class="starselect1" onclick="selectStar1(3)">★</span>
+            <span class="starselect1" onclick="selectStar1(4)">★</span>
+            <span class="starselect1" onclick="selectStar1(5)">★</span>
+        </div>
+        <br>
+        <br>
+        <h2>청결</h2>
+        <div id="stars2">
+            <span class="starselect2" onclick="selectStar2(1)">★</span>
+            <span class="starselect2" onclick="selectStar2(2)">★</span>
+            <span class="starselect2" onclick="selectStar2(3)">★</span>
+            <span class="starselect2" onclick="selectStar2(4)">★</span>
+            <span class="starselect2" onclick="selectStar2(5)">★</span>
+        </div>
+        <br>
+        <br>
+        <h2>치안</h2>
+        <div id="stars3">
+            <span class="starselect3" onclick="selectStar3(1)">★</span>
+            <span class="starselect3" onclick="selectStar3(2)">★</span>
+            <span class="starselect3" onclick="selectStar3(3)">★</span>
+            <span class="starselect3" onclick="selectStar3(4)">★</span>
+            <span class="starselect3" onclick="selectStar3(5)">★</span>
+        </div>
+        <br>
+        <br>
+        <h2>교통</h2>
+        <div id="stars4">
+            <span class="starselect4" onclick="selectStar4(1)">★</span>
+            <span class="starselect4" onclick="selectStar4(2)">★</span>
+            <span class="starselect4" onclick="selectStar4(3)">★</span>
+            <span class="starselect4" onclick="selectStar4(4)">★</span>
+            <span class="starselect4" onclick="selectStar4(5)">★</span>
+        </div>
+        <br>
+        <br>
+        <h2>비용</h2>
+        <div id="stars5">
+            <span class="starselect5" onclick="selectStar5(1)">★</span>
+            <span class="starselect5" onclick="selectStar5(2)">★</span>
+            <span class="starselect5" onclick="selectStar5(3)">★</span>
+            <span class="starselect5" onclick="selectStar5(4)">★</span>
+            <span class="starselect5" onclick="selectStar5(5)">★</span>
+        </div>
+        <br>
+        <button onclick="confirmRating(this)">확인</button>
+        <button onclick="closeModal()">취소</button>
+    </div>
+</div>
+
+<script>
+    let selectedRating1 = 0;
+    let selectedRating2 = 0;
+    let selectedRating3 = 0;
+    let selectedRating4 = 0;
+    let selectedRating5 = 0;
+    let cities_str = "";
+    let announce_ment = "";
+    const Button = document.getElementById('translate_button');
+    document.addEventListener('DOMContentLoaded', function () {
+        const starsElements = document.querySelectorAll('.stars');
+        starsElements.forEach(starElement => {
+            const sname = starElement.getAttribute('sname');
+            fetch('/get_average_rating?hotel_name=' + encodeURIComponent(sname))
+                .then(response => response.json())
+                .then(data => {
+                    const rating = data.rating;
+                    if (rating === 0 || rating === null || rating === undefined) {
+                        starElement.innerHTML = '(별점정보 없음)';
+                    }
+                    else {
+                        starElement.innerHTML = getStarsHtml(rating);
+                    }
+                })
+                .catch(error => console.error('Error fetching rating:', error));
+        });
+
+        const info = document.querySelector('.information');
+        const nname = info.getAttribute('nname');
+        const sname = info.getAttribute('sname');
+        const city_name = info.getAttribute('city_name');
+
+        fetch('get_cities_in_cluster?city=' + encodeURIComponent(sname))
+            .then(response => response.json())
+            .then(data => {
+                var latitude = data.latitude;
+                var longitude = data.longitude;
+                if ((latitude != -1 && longitude != -1) && latitude && longitude) {
+                    Button.style.visibility = 'visible';
+                    var latitude = data.latitude;
+                    var longitude = data.longitude;
+                    const cluster_id = `<a href="cluster/${data.cluster_id}">${data.cluster_id}</a>`;
+                    const clust_cities = data.cities_in_cluster.split(',').map(city => `<a href="tour_city/${city}">${city}</a>`).join(', ');
+                    info.innerHTML = '위도: ' + latitude + '<br>경도: ' + longitude + '<br><br>{{sname}} 의 Cluster ID: ' + cluster_id + '<br>{{sname}} 와 비슷한 추천 도시: ' + clust_cities;
+                    cities_str = data.cities_in_cluster;
+                    announce_ment = info.innerHTML;
+
+                    const mapHtml = data.map_html;
+                    const mapIframe = document.createElement('iframe');
+                    mapIframe.srcdoc = mapHtml;
+                    mapIframe.style.border = 'none';
+                    mapIframe.style.width = "1050px";
+                    mapIframe.style.height = '700px';
+
+                    const mapContainer = document.createElement('div');
+                    mapContainer.innerHTML = `<h4>&nbsp;&nbsp;&nbsp;위치 지도</h4>`;
+
+                    mapContainer.style.marginBottom = '0px';
+                    mapContainer.appendChild(mapIframe);
+                    info.appendChild(mapContainer);
+                    const urls = data.image_urls.split(',');
+                    if (urls) {
+                        const imgtags = document.querySelectorAll('.imgtags');
+                        imgtags.forEach((image, index) => {
+                            if (urls[index]) {
+                                image.src = urls[index];
+                            }
+                        });
+                    }
+                }
+                else {
+                    fetch('get_map_url?city=' + encodeURIComponent(sname))
+                        .then(response => response.json())
+                        .then(data => {
+                            var latitude = data.latitude;
+                            var longitude = data.longitude;
+                            if (latitude && longitude && (latitude != -1 && longitude != -1)) {
+                                Button.style.visibility = 'visible';
+                                const cluster_id = `<a href="cluster/${data.cluster_id}">${data.cluster_id}</a>`;
+                                const clust_cities = data.cities_in_cluster.split(',').map(city => `<a href="tour_city/${city}">${city}</a>`).join(', ');
+
+                                info.innerHTML = '위도: ' + latitude + '<br>경도: ' + longitude + '<br><br>{{sname}} 의 Cluster ID: ' + cluster_id + '<br>{{sname}} 의 주변 추천 도시: ' + clust_cities;
+
+                                const mapHtml = data.map_html;
+                                const mapIframe = document.createElement('iframe');
+                                mapIframe.srcdoc = mapHtml;
+                                mapIframe.style.border = 'none';
+                                mapIframe.style.width = "1050px";
+                                mapIframe.style.height = '700px';
+
+                                const mapContainer = document.createElement('div');
+                                mapContainer.innerHTML = `<h4>&nbsp;&nbsp;&nbsp;위치 지도</h4>`;
+                                mapContainer.style.marginBottom = '0px';
+                                mapContainer.appendChild(mapIframe);
+                                info.appendChild(mapContainer);
+
+                                const urls = data.image_urls.split(',');
+                                if (urls) {
+                                    const imgtags = document.querySelectorAll('.imgtags');
+                                    imgtags.forEach((image, index) => {
+                                        if (urls[index]) {
+                                            image.src = urls[index];
+                                        }
+                                    }
+                                    );
+                                }
+                                if ((latitude == -1 && longitude == -1) || (latitude == null && longitude == null)) {
+                                    do_final(city_name);
+                                }
+                            }
+                            else {
+                                do_final(city_name);
+                            }
+                        })
+                        .catch(() => {
+                            do_final(city_name);
+                        })
+
+                }
+            });
+
+        function getStarsHtml(rating) {
+            const fullStars = Math.floor(rating);
+            const halfStar = (rating % 1) >= 0.5 ? 1 : 0;
+            const emptyStars = 5 - fullStars - halfStar;
+
+            let starsHtml = '';
+
+            for (let i = 0; i < fullStars; i++) {
+                starsHtml += '<span class="star filled">★</span>';
+            }
+
+            if (halfStar) {
+                starsHtml += '<span class="star half">★</span>';
+            }
+
+            for (let i = 0; i < emptyStars; i++) {
+                starsHtml += '<span class="star">★</span>';
+            }
+
+            return starsHtml + ' ' + rating;
+        }
+    })
+
+
+    function openModal(element) {
+        const hotelName = element.getAttribute('data-hotel-name');
+        const hotelSub = element.getAttribute('data-hotel-sub');
+        document.getElementById('myModal').style.display = "block";
+
+        const confirmButton = document.querySelector('button[onclick="confirmRating(this)"]');
+        confirmButton.setAttribute('data-hotel-name', hotelName);
+        confirmButton.setAttribute('data-hotel-sub', hotelSub);
+    }
+
+
+    function closeModal() {
+        selectStar1(0);
+        selectStar2(0);
+        selectStar3(0);
+        selectStar4(0);
+        selectStar5(0);
+
+        document.getElementById('myModal').style.display = "none";
+    }
+
+    function selectStar1(rating) {
+        selectedRating1 = rating;
+        const stars = document.querySelectorAll('.starselect1');
+        stars.forEach((star, index) => {
+            star.style.color = index < rating ? 'gold' : 'gray';
+        });
+    }
+    function selectStar2(rating) {
+        selectedRating2 = rating;
+        const stars = document.querySelectorAll('.starselect2');
+        stars.forEach((star, index) => {
+            star.style.color = index < rating ? 'gold' : 'gray';
+        });
+    }
+    function selectStar3(rating) {
+        selectedRating3 = rating;
+        const stars = document.querySelectorAll('.starselect3');
+        stars.forEach((star, index) => {
+            star.style.color = index < rating ? 'gold' : 'gray';
+        });
+    }
+    function selectStar4(rating) {
+        selectedRating4 = rating;
+        const stars = document.querySelectorAll('.starselect4');
+        stars.forEach((star, index) => {
+            star.style.color = index < rating ? 'gold' : 'gray';
+        });
+    }
+    function selectStar5(rating) {
+        selectedRating5 = rating;
+        const stars = document.querySelectorAll('.starselect5');
+        stars.forEach((star, index) => {
+            star.style.color = index < rating ? 'gold' : 'gray';
+        });
+    }
+
+    function confirmRating(button) {
+        const hotelName = button.getAttribute('data-hotel-name');
+        const hotelSub = button.getAttribute('data-hotel-sub');
+        const name = hotelName;
+        const city_name = '{{city_name}}';
+
+        if (selectedRating1 === 0 | selectedRating2 === 0 | selectedRating3 === 0 | selectedRating4 === 0 | selectedRating5 === 0) {
+            alert("별점을 선택해주세요.");
+            return;
+        }
+        fetch('/submit_rating', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ hotel_name: name, city_name: city_name, rating1: selectedRating1, rating2: selectedRating2, rating3: selectedRating3, rating4: selectedRating4, rating5: selectedRating5 }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'error') {
+                    alert(data.message);
+                } else {
+                    alert(`평균 ${(selectedRating1 + selectedRating2 + selectedRating3 + selectedRating4 + selectedRating5) / 5}점을 주셨습니다.`);
+                    closeModal();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function do_final(city_name) {
+        fetch('get_cities_in_cluster?city=' + encodeURIComponent(city_name))
+            .then(response => response.json())
+            .then(data => {
+                var latitude = data.latitude;
+                var longitude = data.longitude;
+                if ((latitude != -1 && longitude != -1) && latitude && longitude) {
+                    Button.style.visibility = 'visible';
+                    const cluster_id = `<a href="cluster/${data.cluster_id}">${data.cluster_id}</a>`;
+                    const clust_cities = data.cities_in_cluster.split(',').map(city => `<a href="tour_city/${city}">${city}</a>`).join(', ');
+                    const info = document.querySelector('.information');
+
+                    info.innerHTML = '위도: ' + latitude + '<br>경도: ' + longitude + '<br><br>{{sname}} 의 Cluster ID: ' + cluster_id + '<br>{{sname}} 와 비슷한 추천 도시: ' + clust_cities;
+
+                    const mapHtml = data.map_html;
+                    const mapIframe = document.createElement('iframe');
+                    mapIframe.srcdoc = mapHtml;
+                    mapIframe.style.border = 'none';
+                    mapIframe.style.width = "1050px";
+                    mapIframe.style.height = '700px';
+
+                    const mapContainer = document.createElement('div');
+                    mapContainer.innerHTML = `<h4>&nbsp;&nbsp;&nbsp;위치 지도</h4>`;
+                    mapContainer.id = "mapid";
+
+                    mapContainer.style.marginBottom = '0px';
+                    mapContainer.appendChild(mapIframe);
+                    info.appendChild(mapContainer);
+                    const urls = data.image_urls.split(',');
+                    if (urls) {
+                        const imgtags = document.querySelectorAll('.imgtags');
+                        imgtags.forEach((image, index) => {
+                            if (urls[index]) {
+                                image.src = urls[index];
+                            }
+                        });
+                    }
+                }
+                else {
+                    const info = document.querySelector('.information');
+                    info.innerHTML = '{{sname}} 을 찾을 수 없습니다.';
+                    const mapHtml = 'https://www.bing.com/search?q=%EC%98%81%EC%96%B4+%EB%B2%88%EC%97%AD%27&qs=n&form=QBRE&sp=-1&lq=0&pq=%EC%98%81%EC%96%B4+%EB%B2%88%EC%97%AD%27&sc=10-6&sk=&cvid=013E0ED400444941836E685B460D7441&ghsh=0&ghacc=0&ghpl=';
+                    const mapIframe = document.createElement('iframe');
+                    mapIframe.src = mapHtml;
+                    mapIframe.style.border = 'none';
+                    mapIframe.style.width = '730px';
+                    mapIframe.style.height = '380px';
+
+                    const mapContainer = document.createElement('div');
+                    mapContainer.appendChild(mapIframe);
+
+                    const inputContainer = document.createElement('div');
+                    inputContainer.style.marginTop = '20px';
+
+                    const inputField = document.createElement('input');
+                    inputField.type = 'text';
+                    inputField.style.padding = '10px';
+                    inputField.style.width = '300px';
+                    inputField.style.marginRight = '10px';
+
+                    const confirmButton = document.createElement('button');
+                    confirmButton.innerText = '확인';
+                    confirmButton.style.padding = '10px 20px';
+
+                    confirmButton.addEventListener('click', function () {
+                        const inputValue = inputField.value;
+                        if (inputValue) {
+                            info.removeChild(info.lastChild);
+                            //const url = `https://www.google.com/maps/search/${inputValue}?hl=ko&entry=ttu&g_ep=EgoyMDI0MTEwNi4wIKXMDSoASAFQAw%3D%3D`;
+                            //const url = `https://www.google.co.kr/maps/search/${inputValue}`;
+                            //const url = `https://www.google.co.kr/maps/place/${inputValue}`;
+                            //const url = 'https://www.google.co.kr/maps/place/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C/data=!4m6!3m5!1s0x357ca28b61c565cd:0x858aedb4e4ea83eb!8m2!3d37.5652129!4d126.9773517!16s%2Fg%2F11bc6whn1n?entry=ttu&g_ep=EgoyMDI0MTEwNi4wIKXMDSoASAFQAw%3D%3D'
+                            const url = `https://map.naver.com/p/search/${inputValue}`
+                            const mapIframe = document.createElement('iframe');
+                            mapIframe.src = url;
+                            mapIframe.style.border = 'none';
+                            mapIframe.style.width = '1050px';
+                            mapIframe.style.height = '750px';
+
+                            const mapContainer = document.createElement('div');
+                            mapContainer.appendChild(mapIframe);
+                            info.appendChild(mapContainer);
+                        }
+                    });
+
+                    inputContainer.appendChild(inputField);
+                    inputContainer.appendChild(confirmButton);
+                    info.appendChild(inputContainer);
+                }
+            })
+            .catch(() => {
+                info.innerHTML = '{{sname}} 을 찾을 수 없습니다.';
+
+                const mapHtml = 'https://www.bing.com/search?q=%EC%98%81%EC%96%B4+%EB%B2%88%EC%97%AD%27&qs=n&form=QBRE&sp=-1&lq=0&pq=%EC%98%81%EC%96%B4+%EB%B2%88%EC%97%AD%27&sc=10-6&sk=&cvid=013E0ED400444941836E685B460D7441&ghsh=0&ghacc=0&ghpl=';
+                const mapIframe = document.createElement('iframe');
+                mapIframe.src = mapHtml;
+                mapIframe.style.border = 'none';
+                mapIframe.style.width = '730px';
+                mapIframe.style.height = '380px';
+
+                const mapContainer = document.createElement('div');
+                mapContainer.appendChild(mapIframe);
+
+                const inputContainer = document.createElement('div');
+                inputContainer.style.marginTop = '20px';
+
+                const inputField = document.createElement('input');
+                inputField.type = 'text';
+                inputField.style.padding = '10px';
+                inputField.style.width = '300px';
+                inputField.style.marginRight = '10px';
+
+                const confirmButton = document.createElement('button');
+                confirmButton.innerText = '확인';
+                confirmButton.style.padding = '10px 20px';
+
+                confirmButton.addEventListener('click', function () {
+                    const inputValue = inputField.value;
+                    if (inputValue) {
+                        info.removeChild(info.lastChild);
+                        //const url = `https://www.google.com/maps/search/${inputValue}?hl=ko&entry=ttu&g_ep=EgoyMDI0MTEwNi4wIKXMDSoASAFQAw%3D%3D`;
+                        //const url = `https://www.google.co.kr/maps/search/${inputValue}`;
+                        //const url = `https://www.google.co.kr/maps/place/${inputValue}`;
+                        //const url = 'https://www.google.co.kr/maps/place/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C/data=!4m6!3m5!1s0x357ca28b61c565cd:0x858aedb4e4ea83eb!8m2!3d37.5652129!4d126.9773517!16s%2Fg%2F11bc6whn1n?entry=ttu&g_ep=EgoyMDI0MTEwNi4wIKXMDSoASAFQAw%3D%3D'
+                        const url = `https://map.naver.com/p/search/${inputValue}`
+                        const mapIframe = document.createElement('iframe');
+                        mapIframe.src = url;
+                        mapIframe.style.border = 'none';
+                        mapIframe.style.width = '1050px';
+                        mapIframe.style.height = '750px';
+
+                        const mapContainer = document.createElement('div');
+                        mapContainer.appendChild(mapIframe);
+                        info.appendChild(mapContainer);
+                    }
+                });
+
+                inputContainer.appendChild(inputField);
+                inputContainer.appendChild(confirmButton);
+                info.appendChild(inputContainer);
+            });
+    }
+
+    Button.addEventListener('click', function () {
+        const hidden = document.getElementById('hiddenalert');
+        hidden.style.visibility = 'visible';
+
+        const info = document.querySelector('.information');
+        const mapIframe = info.querySelector('iframe');
+
+        fetch('/get_translate_en_to_ko_just?city_names=' + encodeURIComponent(cities_str))
+            .then(response => response.json())
+            .then(data => {
+                const cities = cities_str.split(',');
+                let arraylist = cities.map((city, index) => `${city}:${data[index]}`);
+                let texturls = "";
+
+                arraylist.forEach((city, index) => {
+                    let citydiv = city.split(':');
+                    let url = `<a href="/tour_city/${citydiv[0]}">${citydiv[0]}</a>`;
+                    let url2 = `<a href="/tour_city/${citydiv[1]}">${citydiv[1]}`;
+                    texturls += url + ' (' + url2 + ')';
+                    if (index < arraylist.length - 1) {
+                        texturls += ', ';
+                    }
+                });
+
+                const ann = announce_ment.split('도시: ');
+                ann[1] = texturls;
+                info.innerHTML = ann[0] + ann[1];
+
+                const abc = `<br><br><h4>&nbsp;&nbsp;&nbsp;위치 지도</h4>`;
+                info.insertAdjacentHTML('beforeend', abc);
+
+                if (mapIframe && !info.contains(mapIframe)) {
+                    info.appendChild(mapIframe);
+                }
+
+                hidden.style.visibility = 'hidden';
+                Button.style.visibility = 'hidden';
+            });
+    });
+
+
+
+</script>
+
+<footer>
+    <p>&copy; 2024 Term Project &nbsp;&nbsp;&nbsp;Silk Road Traveler</p>
+</footer>
+
+</html>

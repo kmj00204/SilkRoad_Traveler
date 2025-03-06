@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silk Road Travler</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+</head>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="searchingbutton"
+        style="height:100px; position:absolute;top:5px;left:4px; cursor:pointer;" onclick="window.location='/'">
+
+    <a href="/" style="text-decoration: none;color:white;">
+        <h1 style="margin-bottom: 5px;">The Silk Road Traveler</h1>
+    </a>
+    <nav>
+        <a href="/cluster_info">Cluster</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/up_searching">검색어</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/recommend_cluster">맞춤</a>
+    </nav>
+    <h5 style="top:60px;right:200px;position:absolute;">{{ welcome_message }}</h5>
+
+    {% if welcome_message.startswith('어서오세요') %}
+    <img src="{{ url_for('static', filename='logout_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:165px;" onclick="window.location='/logout'">
+    {% else %}
+    <img src="{{ url_for('static', filename='login_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:160px;" onclick="window.location='/login'">
+    {% endif %}
+    <img src="{{ url_for('static', filename='user_info.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:120px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_like'">
+    <img src="{{ url_for('static', filename='starimage.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:80px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_info'">
+
+    <style>
+        .containerloc {
+            width: 950px;
+            height: 670px;
+            background-color: #e0e0e0;
+            position: relative;
+            overflow: block;
+            background-image: url('/static/black_map.jpg');
+            background-size: contain;
+            background-position: center;
+            border: 2px solid #333;
+        }
+
+        .coordinates {
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+        }
+    </style>
+</header>
+
+<body>
+    <div style="position:absolute; left:900px; z-index: 1;">
+        <h2>사용자 설정</h2>
+    </div>
+    <div class="container8" style="display: flex; justify-content: space-between; flex-wrap: wrap; ">
+        <div style="margin-left:20px;width:50px;height:500px;"><br><br><br><br>
+            <h3>전통</h><br><br><br><br>
+                <h3>청결</h><br><br><br>
+                    <h3 style="margin-top:30px;">치안</h><br><br><br><br>
+                        <h3>교통</h><br><br><br>
+                            <h3 style="margin-top: 30px;">비용</h>
+        </div>
+        <div class="slider-container" style="height:530px;">
+            <div style="display: flex; justify-content: space-between;">
+                <h4>중요</h4>
+                <h4>덜 중요</h4>
+            </div>
+            <br>
+            <input type="range" id="mySlider1" min="0" max="5.0" value="2.5" step="0.01">
+            <div class="value-display">
+                <span style="visibility:hidden;" id="sliderValue1">1</span>
+            </div>
+            <br>
+            <br>
+
+            <br>
+            <input type="range" id="mySlider2" min="0" max="5.0" value="2.5" step="0.01">
+            <div class="value-display">
+                <span style="visibility:hidden;" id="sliderValue2">1</span>
+            </div>
+            <br>
+            <br>
+            <br>
+            <input type="range" id="mySlider3" min="0" max="5.0" value="2.5" step="0.01">
+            <div class="value-display">
+                <span style="visibility:hidden;" id="sliderValue3">1</span>
+            </div>
+            <br>
+            <br>
+            <br>
+            <input type="range" id="mySlider4" min="0" max="5.0" value="2.5" step="0.01">
+            <div class="value-display">
+                <span style="visibility:hidden;" id="sliderValue4">1</span>
+            </div>
+            <br>
+            <br>
+            <br>
+            <input type="range" id="mySlider5" min="0" max="5.0" value="2.5" step="0.01">
+            <div class="value-display">
+                <span style="visibility:hidden;" id="sliderValue5">1</span>
+            </div>
+        </div>
+        <div class="containerloc">
+            <div class="coordinates" id="coords"></div>
+        </div>
+
+        <div style="display:flex; justify-content: space-between; width: 100%;">
+            <div id="coordis"></div>
+            <div style="margin-top:20px;">
+                <p id="mapcontainer"></p>
+            </div>
+            <div style="margin-top: 30px;">
+                <button class="abcde">버튼</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    const sliders = document.querySelectorAll('input[type="range"]');
+
+    sliders.forEach(slider => {
+        slider.addEventListener('input', function () {
+            const valueDisplay = document.getElementById('sliderValue' + slider.id.slice(-1));
+            valueDisplay.textContent = slider.value;
+        });
+    });
+
+    const confirmButton = document.querySelector('.abcde');
+    confirmButton.innerText = '찾기';
+    confirmButton.style.padding = '5px 10px';
+
+    const container = document.querySelector('.containerloc');
+    const coordsDisplay = document.getElementById('coords');
+    const coordsDisplays = document.getElementById('coordis');
+
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
+
+    const maxX = containerWidth / 2;
+    const maxY = containerHeight / 2;
+
+    container.addEventListener('mousemove', function (event) {
+        let mouseX = event.clientX - container.getBoundingClientRect().left;
+        let mouseY = event.clientY - container.getBoundingClientRect().top;
+
+        mouseX = mouseX - ((containerWidth + 60) / 2);
+        mouseY = ((containerHeight + 60) / 2) - mouseY;
+
+        mouseX = Math.max(-maxX, Math.min(mouseX, maxX)) * 0.516544;
+        mouseY = Math.max(-maxY, Math.min(mouseY, maxY)) * 0.2498;
+
+        coordsDisplay.innerHTML = `(${mouseY.toFixed(2)}, ${mouseX.toFixed(2)})`;
+    });
+
+    container.addEventListener('click', function (event) {
+        let clickX = event.clientX - container.getBoundingClientRect().left;
+        let clickY = event.clientY - container.getBoundingClientRect().top;
+
+        clickX = clickX - (containerWidth / 2);
+        clickY = (containerHeight / 2) - clickY;
+
+        clickX = Math.max(-maxX, Math.min(clickX, maxX));
+        clickY = Math.max(-maxY, Math.min(clickY, maxY));
+
+        let mouseX = event.clientX - container.getBoundingClientRect().left;
+        let mouseY = event.clientY - container.getBoundingClientRect().top;
+
+        mouseX = mouseX - ((containerWidth + 60) / 2);
+        mouseY = ((containerHeight + 60) / 2) - mouseY;
+
+        mouseX = Math.max(-maxX, Math.min(mouseX, maxX)) * 0.516544;
+        mouseY = Math.max(-maxY, Math.min(mouseY, maxY)) * 0.2498;
+
+        const existingDots = container.querySelectorAll('.dot');
+        existingDots.forEach(dot => dot.remove());
+
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+
+        dot.style.left = `${(clickX + maxX) * (containerWidth / (2 * maxX)) - 5}px`;
+        dot.style.top = `${(maxY - clickY) * (containerHeight / (2 * maxY)) - 5}px`;
+
+        container.appendChild(dot);
+
+        coordsDisplays.innerHTML = `<br>위도 : ${mouseY.toFixed(2)} <br>경도 :  ${mouseX.toFixed(2)}`;
+    });
+
+    confirmButton.addEventListener('click', function () {
+        const valueDisplays = document.querySelectorAll('.value-display');
+        if (!coordsDisplays.textContent) {
+            alert('지도에서 위치를 선택해주세요.');
+        }
+        abc = [];
+        abc.push(coordsDisplays.textContent.match(/[-+]?[0-9]*\.?[0-9]+/g)[0]);
+        abc.push(coordsDisplays.textContent.match(/[-+]?[0-9]*\.?[0-9]+/g)[1]);
+        valueDisplays.forEach(valueDisplay => {
+            abc.push(valueDisplay.textContent.trim());
+        })
+
+        fetch('/get_cluster_weight', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ weight_bias: abc }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const mapcontainer = document.getElementById('mapcontainer');
+                mapcontainer.innerHTML = '추천 Cluster : ';
+                data.forEach((item, index) => {
+                    const link = document.createElement('a')
+                    link.href = `/cluster/${item}`;
+                    link.textContent = `Cluster${item}`;
+                    if (index !== data.length - 1) {
+                        link.textContent += ', ';
+                    }
+                    mapcontainer.appendChild(link);
+                })
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    })
+</script>
+
+<footer>
+    <p>&copy; 2024 Term Project &nbsp;&nbsp;&nbsp;Silk Road Traveler</p>
+</footer>
+
+</html>

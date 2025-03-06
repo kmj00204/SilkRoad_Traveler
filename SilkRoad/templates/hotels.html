@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silk Road Travler</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+</head>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="searchingbutton"
+        style="height:100px; position:absolute;top:5px;left:4px; cursor:pointer;" onclick="window.location='/'">
+
+    <a href="/" style="text-decoration: none;color:white;">
+        <h1 style="margin-bottom: 5px;">The Silk Road Traveler</h1>
+    </a>
+    <nav>
+        <a href="/cluster_info">Cluster</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/up_searching">검색어</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/recommend_cluster">맞춤</a>
+    </nav>
+    <h5 style="top:60px;right:200px;position:absolute;">{{ welcome_message }}</h5>
+
+    {% if welcome_message.startswith('어서오세요') %}
+    <img src="{{ url_for('static', filename='logout_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:165px;" onclick="window.location='/logout'">
+    {% else %}
+    <img src="{{ url_for('static', filename='login_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:160px;" onclick="window.location='/login'">
+    {% endif %}
+    <img src="{{ url_for('static', filename='user_info.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:120px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_like'">
+    <img src="{{ url_for('static', filename='starimage.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:80px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_info'">
+</header>
+
+<body style="text-align: center;">
+    <div class="container1"
+        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start;">
+        <div
+            style="height:400px;grid-column: span 3;display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start;">
+            <div id="mapframe">
+            </div>
+            <div style="width:50px;">
+
+            </div>
+            <div>
+                <h1 style="margin-bottom: 0; display: inline-block;">{{city}}</h1>
+                <h3 style="display: inline-block;">{{city_en}}</h3>
+                <img id="graphframe" src="" alt="Base64 Image" style="max-width: 100%; height: auto;">
+                <h4 style="margin-top: 0;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;전통&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;청결&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;치안&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;교통&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;비용
+                </h4>
+            </div>
+        </div>
+
+        <h2 align="center" style="grid-column: span 3;">{{city}} 관광지 목록</h2>
+
+        {% for hotel in hotels %}
+        <div style="border:2px solid black; padding:10px; width:100%; padding-right:20px;border-radius: 15px;">
+            <table>
+                <tr class="centered">
+                    <td colspan="3">
+                        <h2 style="line-height:1;margin-bottom:0;margin-top:0;">{{ hotel[0] }}</h2>
+                        <h6 style="line-height:1;margin-bottom:0;margin-top:1%;">{{hotel[5]}}</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="{{ hotel[1] }}" alt="{{ hotel[0] }}"
+                                style="width: 230px; height: 170px; cursor:pointer;" class="tour"
+                                data-hotel-name="{{ hotel[0] }}" data-hotel-sub="{{hotel[5]}}" city_name="{{city}}"
+                                onclick="navigatorToTourInfo(this)">
+                            <br>
+                        </div>
+                    </td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td>
+                        <div style="padding-left: 10px;">
+                            <a align="center">&nbsp;&nbsp;&nbsp;&nbsp;예약하기</a><br>
+                            <a href="{{hotel[2]}}" target="_blank">
+                                <img src="{{url_for('static',filename='hotel1.png')}}" class="bordered-image">
+                            </a>
+                            <br>
+                            <a href="{{hotel[3]}}" target="_blank">
+                                <img src="{{url_for('static',filename='hotel2.png')}}" class="bordered-image">
+                            </a>
+                            <br>
+                            <a href="{{hotel[4]}}" target="_blank">
+                                <img src="{{url_for('static',filename='hotel3.png')}}" class="bordered-image">
+                            </a>
+                            <br>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="centered">
+                    <td colspan="3">
+                        <div class="starcount" data-hotel-name="Hotel A" data-hotel-sub="Deluxe Room"></div>
+                        <h5 class="stars" style="display:inline;" data-hotel-name="{{ hotel[0] }}" id="starrating"
+                            data-hotel-sub="{{hotel[5]}}">별점로드중 ...
+                        </h5>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+<footer>
+    <p>&copy; 2024 Term Project &nbsp;&nbsp;&nbsp;Silk Road Traveler</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/get_indi_rating?city_name=' + encodeURIComponent('{{city}}'))
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    const imgElement = document.getElementById('graphframe');
+                    imgElement.src = 'data:image/png;base64,' + data.image;
+                }
+            })
+            .catch(error => console.error('Error fetching rating:', error));
+        fetch('/get_map_only?city_name=' + encodeURIComponent('{{city}}'))
+            .then(response => response.json())
+            .then(data => {
+                const url = data.url;
+                const mapframe = document.getElementById('mapframe');
+                const mapIframe = document.createElement('iframe');
+                mapIframe.srcdoc = url;
+                mapIframe.style.border = 'none';
+                mapIframe.style.width = "700px";
+                mapIframe.style.height = '900px';
+
+                const mapContainer = document.createElement('div');
+
+                mapContainer.style.marginBottom = '0px';
+                mapContainer.appendChild(mapIframe);
+                mapframe.appendChild(mapContainer);
+
+            })
+        const starsElements = document.querySelectorAll('.stars');
+        starsElements.forEach(starElement => {
+            const hotelName = starElement.getAttribute('data-hotel-name');
+            const hotelSub = starElement.getAttribute('data-hotel-sub');
+            const name = hotelName;
+            fetch('/get_average_rating?hotel_name=' + encodeURIComponent(name))
+                .then(response => response.json())
+                .then(data => {
+                    const rating = data.rating;
+                    starElement.innerHTML = getStarsHtml(rating);
+                    if (rating === 0 || rating === null || rating === undefined) {
+                        starElement.innerHTML = `<br>(별점정보 없음)`;
+                    }
+                })
+                .catch(error => console.error('Error fetching rating:', error));
+        });
+
+    });
+
+    function getStarsHtml(rating) {
+        if (rating === null || rating === undefined || isNaN(rating)) {
+            return '(별점정보 없음)';
+        }
+        const fullStars = Math.floor(rating);
+        const halfStar = (rating % 1) >= 0.5 ? 1 : 0;
+        const emptyStars = 5 - fullStars - halfStar;
+
+        let starsHtml = '';
+
+        for (let i = 0; i < fullStars; i++) {
+            starsHtml += '<span class="star filled">★</span>';
+        }
+
+        if (halfStar) {
+            starsHtml += '<span class="star half">★</span>';
+        }
+
+        for (let i = 0; i < emptyStars; i++) {
+            starsHtml += '<span class="star">★</span>';
+        }
+
+        return starsHtml + ' ' + (rating || 0);
+    }
+    function navigatorToTourInfo(imageElement) {
+        const imageSrc = imageElement.src;
+        const hotelName = imageElement.getAttribute('data-hotel-name');
+        const hotelSub = imageElement.getAttribute('data-hotel-sub');
+        const city_name = imageElement.getAttribute('city_name');
+        const url = `/tour_info?src=${encodeURIComponent(imageSrc)}&sname=${encodeURIComponent(hotelName)}&nname=${encodeURIComponent(hotelSub)}&city_name=${city_name}`;
+        window.location.href = url;
+    }
+
+    function selectStar(rating) {
+        selectedRating = rating;
+        const stars = document.querySelectorAll('.starselect');
+        stars.forEach((star, index) => {
+            star.style.color = index < rating ? 'gold' : 'gray';
+        });
+    }
+
+</script>
+
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silk Road Travler</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+</head>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="searchingbutton"
+        style="height:100px; position:absolute;top:5px;left:4px; cursor:pointer;" onclick="window.location='/'">
+
+    <a href="/" style="text-decoration: none;color:white;">
+        <h1 style="margin-bottom: 5px;">The Silk Road Traveler</h1>
+    </a>
+    <nav>
+        <a href="/cluster_info">Cluster</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/up_searching">검색어</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/recommend_cluster">맞춤</a>
+    </nav>
+    <h5 style="top:60px;right:200px;position:absolute;">{{ welcome_message }}</h5>
+
+    {% if welcome_message.startswith('어서오세요') %}
+    <img src="{{ url_for('static', filename='logout_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:165px;" onclick="window.location='/logout'">
+    {% else %}
+    <img src="{{ url_for('static', filename='login_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:160px;" onclick="window.location='/login'">
+    {% endif %}
+    <img src="{{ url_for('static', filename='user_info.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:120px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_like'">
+    <img src="{{ url_for('static', filename='starimage.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:80px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_info'">
+</header>
+
+<body>
+    <div class="container9" style="height:1000px;text-align: center;">
+        <div style="width:120px;"></div>
+        <div style="width:60px;">&nbsp;</div>
+        <div
+            style="display: flex;flex-wrap: wrap; justify-content: space-between; align-items: flex-start;width:1000px;">
+            <div>
+                {%if results %}
+                <h2>인기 검색어 순위</h2>
+                <table border="2" style="border-collapse: collapse; width:auto; margin:0 auto;height:600px;">
+                    <tr>
+                        <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            순위
+                        </td>
+                        <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            검색어
+                        </td>
+                        <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            검색 횟수
+                        </td>
+                    </tr>
+                    {%for result in results%}
+                    <tr>
+                        <td>
+                            {{loop.index}}
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;<a href='tour_city/{{ result[0] }}'>{{ result[0] }}</a>&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            {{result[1]}}
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </table>
+                {%endif%}
+            </div>
+            <div>
+                {%if recents %}
+                <h2>최근 검색됨</h2>
+                <table border="2" style="border-collapse: collapse; width:auto; margin:0 auto;height:600px;">
+                    <tr>
+                        <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            번호
+                        </td>
+                        <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            검색어
+                        </td>
+                        <td style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            검색 일자
+                        </td>
+                    </tr>
+                    {%for recent in recents%}
+                    <tr>
+                        <td>
+                            {{loop.index}}
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;<a href='tour_city/{{ recent[0] }}'>{{ recent[0] }}</a>&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;{{recent[1]}}&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </table>
+                {%endif%}
+            </div>
+        </div>
+        <div style="width:120px;"></div>
+    </div>
+</body>
+
+<script>
+
+</script>
+
+
+<footer>
+    <p>&copy; 2024 Term Project &nbsp;&nbsp;&nbsp;Silk Road Traveler</p>
+</footer>
+
+
+
+</html>

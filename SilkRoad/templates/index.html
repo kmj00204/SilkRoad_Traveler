@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silk Road Travler</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+</head>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="searchingbutton"
+        style="height:100px; position:absolute;top:5px;left:4px; cursor:pointer;" onclick="window.location='/'">
+
+    <a href="/" style="text-decoration: none;color:white;">
+        <h1 style="margin-bottom: 5px;">The Silk Road Traveler</h1>
+    </a>
+    <nav>
+        <a href="/cluster_info">Cluster</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/up_searching">검색어</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/recommend_cluster">맞춤</a>
+    </nav>
+    <h5 style="top:60px;right:200px;position:absolute;">{{ welcome_message }}</h5>
+
+    {% if welcome_message.startswith('어서오세요') %}
+    <img src="{{ url_for('static', filename='logout_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:165px;" onclick="window.location='/logout'">
+    {% else %}
+    <img src="{{ url_for('static', filename='login_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:160px;" onclick="window.location='/login'">
+    {% endif %}
+    <img src="{{ url_for('static', filename='user_info.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:120px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_like'">
+    <img src="{{ url_for('static', filename='starimage.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:80px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_info'">
+</header>
+
+<body>
+    <div class="container">
+        <form action="/search" method="post" align="center" id="searchingbutton" style="margin-bottom:10px;">
+            <input type="text" id="city" name="city" required class="styled-input" placeholder="도시 검색">
+            <input type="image" src="{{ url_for('static', filename='sq.png') }}" alt="확인"
+                style="width: 35px; height: 45px;">
+        </form>
+
+
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="이스탄불" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="이스탄불" style="top: 332px; left: 67px; position:absolute;" id="submit-button">
+        </form>
+
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="이즈미르" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="이즈미르" style="top: 395px; left: 35px; position:absolute;" id="submit-button">
+        </form>
+
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="안탈리아" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="안탈리아" style="top: 447px; left: 135px; position:absolute;" id="submit-button">
+        </form>
+
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="시바스" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="시바스" style="top: 363px; left: 207px; position:absolute;" id="submit-button">
+        </form>
+
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="바쿠" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="바쿠" style="top: 343px; left: 463px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="셰키" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="셰키" style="top: 335px; left: 395px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="바그다드" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="바그다드" style="top: 488px; left: 348px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="아르빌" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="아르빌" style="top: 445px; left: 340px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="나자프" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="나자프" style="top: 555px; left: 343px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="와디무사" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="와디무사" style="top: 568px; left: 199px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="제다" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="제다" style="top: 768px; left: 260px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="리야드" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="리야드" style="top: 686px; left: 382px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="메디나" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="메디나" style="top: 685px; left: 250px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="메카" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="메카" style="top: 767px; left: 290px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="테헤란" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="테헤란" style="top: 458px; left: 490px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="이스파한" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="이스파한" style="top: 533px; left: 495px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="쉬라즈" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="쉬라즈" style="top: 600px; left: 512px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="헤라트" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="헤라트" style="top: 500px; left: 695px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="바미안" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="바미안" style="top: 483px; left: 768px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="카불" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="카불" style="top: 500px; left: 808px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="누쿠스" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="누쿠스" style="top: 293px; left: 645px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="부하라" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="부하라" style="top: 330px; left: 685px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="사마르칸트" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="사마르칸트" style="top: 360px; left: 732px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="타슈켄트" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="타슈켄트" style="top: 335px; left: 835px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="이슬라마바드" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="이슬라마바드" style="top: 505px; left: 902px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="라호르" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="라호르" style="top: 568px; left: 923px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="페샤와르" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="페샤와르" style="top: 530px; left: 865px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="카라치" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="카라치" style="top: 685px; left: 786px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="뉴델리" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="뉴델리" style="top: 630px; left: 985px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="자이푸르" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="자이푸르" style="top: 665px; left: 970px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="나구푸르" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="나구푸르" style="top: 705px; left: 1023px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="뭄바이" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="뭄바이" style="top: 817px; left: 897px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="코임바토르" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="코임바토르" style="top: 975px; left: 975px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="벵갈루루" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="벵갈루루" style="top: 935px; left: 990px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="첸나이" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="첸나이" style="top: 912px; left: 1038px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="하이데라바드" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="하이데라바드" style="top: 800px; left: 1020px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="푸리" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="푸리" style="top: 770px; left: 1157px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="치타공" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="치타공" style="top: 726px; left: 1232px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="팀부" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="팀부" style="top: 652px; left: 1237px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="만달레이" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="만달레이" style="top: 680px; left: 1360px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="양곤" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="양곤" style="top: 848px; left: 1330px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="충칭" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="충칭" style="top: 603px; left: 1543px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="청두" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="청두" style="top: 560px; left: 1467px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="란저우" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="란저우" style="top: 540px; left: 1438px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="선전" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="선전" style="top: 747px; left: 1680px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="광저우" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="광저우" style="top: 732px; left: 1660px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="우한" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="우한" style="top: 559px; left: 1688px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="시안" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="시안" style="top: 480px; left: 1560px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="상하이" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="상하이" style="top: 562px; left: 1820px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="항저우" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="항저우" style="top: 563px; left: 1778px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="쑤저우" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="쑤저우" style="top: 565px; left: 1800px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="베이징" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="베이징" style="top: 362px; left: 1723px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="톈진" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="톈진" style="top: 372px; left: 1745px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="울란바토르" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="울란바토르" style="top: 200px; left: 1500px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="우루무치" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="우루무치" style="top: 380px; left: 1198px; position:absolute;" id="submit-button">
+        </form>
+        <form action="/search" method="post">
+            <input type="hidden" id="city" value="알타이" required name="city">
+            <input type="image" src="{{ url_for('static', filename='arrow.png') }}" alt="submit" class="arrow"
+                data-city="알타이" style="top: 227px; left: 1050px; position:absolute;" id="submit-button">
+        </form>
+
+
+        <img src="{{ url_for('static', filename='without.png') }}" width="1850px">
+        <img src=" {{url_for('static',filename='search.png' )}}"
+            style="position: absolute; top: 865px; left: 1710px; height:45px">
+        <img src="{{url_for('static',filename='search.png')}}"
+            style="position: absolute; top: 865px; left: 20px; height:45px">
+
+        <div id="info-popup"
+            style="display: none; position: absolute; background: white; border: 1px solid #ccc; padding: 10px;">
+            <h4 id="city-name"></h4>
+        </div>
+    </div>
+    <div style="margin-bottom:1000px;margin-top:0;padding-top:0;"></div>
+
+</body>
+
+<footer>
+    <p>&copy; 2024 Term Project &nbsp;&nbsp;&nbsp;Silk Road Traveler</p>
+</footer>
+
+<script>
+    const imageButtons = Array.from(document.querySelectorAll('input[type="image"]'))
+        .filter(button => button.closest('form').id !== 'searchingbutton');
+    const infoPopup = document.getElementById('info-popup');
+
+    imageButtons.forEach(button => {
+        button.addEventListener('mouseover', async () => {
+            const city = button.getAttribute('data-city');
+            document.getElementById('city-name').innerText = city;
+
+            const response = await fetch(`/get-image-path/${city}`);
+            const data = await response.json();
+
+            if (data.imagePath) {
+                infoPopup.style.backgroundImage = `url('${data.imagePath}')`;
+            } else {
+                infoPopup.style.backgroundImage = 'url("defaultimage.jpg")';
+            }
+
+            const buttonRect = button.getBoundingClientRect();
+            const popupHeight = infoPopup.offsetHeight;
+            const popupWidth = infoPopup.offsetWidth;
+            const viewportWidth = window.innerWidth;
+
+            let topPosition = buttonRect.bottom + window.scrollY - 120;
+            if (topPosition + popupHeight > 650) {
+                topPosition = buttonRect.top + window.scrollY - 400;
+            }
+
+            let leftPosition = buttonRect.left - 50;
+
+            if (leftPosition + popupWidth > 1680) {
+                leftPosition = viewportWidth - 370;
+            }
+            if (leftPosition < 75) {
+                leftPosition = 75;
+            }
+
+            infoPopup.style.display = 'block';
+            infoPopup.style.top = `${topPosition}px`;
+            infoPopup.style.left = `${leftPosition}px`;
+        });
+        button.addEventListener('mouseout', () => {
+            infoPopup.style.display = 'none';
+        });
+    });
+
+    document.querySelectorAll('form input[type="image"]').forEach(function (input) {
+        let style = window.getComputedStyle(input);
+        let currentTop = parseInt(style.top, 10);
+        let currentLeft = parseInt(style.left, 10);
+        input.style.top = (currentTop - 130) + 'px';
+        input.style.left = (currentLeft - 7) + 'px';
+    });
+</script>
+
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silk Road Travler</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
+</head>
+
+<header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="searchingbutton"
+        style="height:100px; position:absolute;top:5px;left:4px; cursor:pointer;" onclick="window.location='/'">
+
+    <a href="/" style="text-decoration: none;color:white;">
+        <h1 style="margin-bottom: 5px;">The Silk Road Traveler</h1>
+    </a>
+    <nav>
+        <a href="/cluster_info">Cluster</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/up_searching">검색어</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/recommend_cluster">맞춤</a>
+    </nav>
+    <h5 style="top:60px;right:200px;position:absolute;">{{ welcome_message }}</h5>
+
+    {% if welcome_message.startswith('어서오세요') %}
+    <img src="{{ url_for('static', filename='logout_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:165px;" onclick="window.location='/logout'">
+    {% else %}
+    <img src="{{ url_for('static', filename='login_image.png') }}"
+        style="height:30px; cursor:pointer;position:absolute;top:75px;right:160px;" onclick="window.location='/login'">
+    {% endif %}
+    <img src="{{ url_for('static', filename='user_info.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:120px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_like'">
+    <img src="{{ url_for('static', filename='starimage.png') }}" alt="Logo" id="searchingbutton"
+        style="height:35px; position:absolute; top:72px; right:80px; cursor:pointer;z-index: 2;"
+        onclick="window.location='/user_info'">
+</header>
+
+<body>
+    <div class="container7" style="width:1500px;height:3700px;">
+        <div style="height: 100%; margin: 0 auto; text-align: center; ">
+            {% if hotel_data %}
+            {% if username!='admin'%}
+            <h2>내가 남긴 별점</h2>
+            {% else %}
+            <h2>유저가 남긴 별점</h2>
+            <button>&lt;</button>
+            <button>&gt;</button>
+            <input type="text">
+            <button>필터</button>
+            {% endif %}
+            <table border="3"
+                style="border-collapse:collapse; margin: 0 auto; text-align: center; width: auto;margin-top: 15px;">
+                <thead>
+                    <tr>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;&nbsp;번호&nbsp;&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;&nbsp;사용자&nbsp;&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">&nbsp;관광지
+                            이름&nbsp;&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;전통&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;청결&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;치안&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;교통&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;비용&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;평균&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;시간&nbsp;</th>
+                        <th style="background-color: #f2f2f2; color: #333; padding: 10px;font-weight: bold;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;관광지의 평균 별점&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hotel in hotel_data %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{ hotel.username }}</td>
+                        <td>&nbsp;&nbsp;<a href="/tour_city/{{hotel.name}}" id="hotel">{{ hotel.name }}</a>&nbsp;&nbsp;
+                        </td>
+                        <td>{{hotel.rating1}}</td>
+                        <td>{{ hotel.rating2 }}</td>
+                        <td>{{ hotel.rating3 }}</td>
+                        <td>{{ hotel.rating4 }}</td>
+                        <td>{{ hotel.rating5 }}</td>
+                        <td>{{(hotel.rating1 + hotel.rating2+ hotel.rating3+ hotel.rating4+ hotel.rating5)/5}}</td>
+                        <td>&nbsp;&nbsp;{{ hotel.time }}&nbsp;&nbsp;</td>
+                        <td class="stars" data-rating="{{ hotel.avg_rating }}">
+                            {{hotel.avg_rating}}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>아직 별점을 남기지 않았습니다.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+
+<footer>
+    <p>&copy; 2024 Term Project &nbsp;&nbsp;&nbsp;Silk Road Traveler</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const starsElements = document.querySelectorAll('.stars');
+        starsElements.forEach(star => {
+            const rating = parseFloat(star.getAttribute('data-rating'));
+            star.innerHTML = getStarsHtml(rating);
+        });
+    });
+
+    function submitForm(cityName) {
+        document.getElementById('city').value = cityName;
+        document.getElementById('cityForm').submit();
+    }
+    function getStarsHtml(rating) {
+        const fullStars = Math.floor(rating);
+        const halfStar = (rating % 1) >= 0.5 ? 1 : 0;
+        const emptyStars = 5 - fullStars - halfStar;
+
+        let starsHtml = '';
+
+        for (let i = 0; i < fullStars; i++) {
+            starsHtml += '<span class="star filled">★</span>';
+        }
+
+        if (halfStar) {
+            starsHtml += '<span class="star half">★</span>';
+        }
+
+        for (let i = 0; i < emptyStars; i++) {
+            starsHtml += '<span class="star">★</span>';
+        }
+
+        return '&nbsp;&nbsp;' + starsHtml + ' ' + rating + '&nbsp;&nbsp;';
+    }
+</script>
+
+</html>
